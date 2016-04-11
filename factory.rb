@@ -8,13 +8,25 @@ class Factory
       get_symbols(args)
 
       klass = Class.new do
+
+        args.each do |arg|
+          attr_accessor arg
+        end
+
         define_method :initialize do |*values|
           args.each_with_index do |arg,i|
+            arg = "@"<<arg.to_s
             instance_variable_set(arg,values[i])
           end
         end
 
         yield if block_given?
+
+        def == (other)
+          result = true
+          instance_variables.each { |var| result = false unless instance_variable_get(var) == other.instance_variable_get(var)}
+          result
+        end
       end
 
       const_set(class_name, klass) unless class_name.nil?
@@ -33,7 +45,7 @@ class Factory
   end
 end
 
-Cathe = Factory.new(:@a,:@b) do
+Cathe = Factory.new(:a,:b) do
   public
   def lol
     puts "lol"
@@ -41,9 +53,14 @@ Cathe = Factory.new(:@a,:@b) do
 end
 
 a = Cathe.new(1,2)
+b = Cathe.new(1,2)
+c = Cathe.new(1)
+
 #
 p a
 
 p Cathe
 
-Cathe.lol
+p a == b
+p a == c
+
