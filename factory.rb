@@ -54,32 +54,3 @@ class Factory
     end
 
 end
-#
-Cathe = Factory.new(:a,:b, "c") do
-  public
-  def lol
-    puts "lol"
-  end
-end
-
-a = Cathe.new(1,2,"c")
-b = Cathe.new(1,2)
-c = Cathe.new(1)
-
-print "a[0]"; p a[0]
-print "a[1]"; p a[1]
-print "a[2]"; p a[2]
-print "a[-1]"; p a[-1]
-print "a[-2]"; p a[-2]
-print "a[-3]"; p a[-3]
-print "a['a']"; p a['a']
-print "a['@a']"; p a['@a']
-print "a[:a]"; p a[:a]
-print "a[:@a]"; p a[:@a]
-
-a[0] = "new value"
-print 'set new value to a[0]= '; p a[0]
-a[1] = "new value"
-print 'set new value to a[1]= '; p a[1]
-a[2] = "new value"
-print 'set new value to a[2]= '; p a[2]
