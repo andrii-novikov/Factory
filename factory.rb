@@ -26,6 +26,26 @@ class Factory
           instance_variables.each { |var| result = false unless instance_variable_get(var) == other.instance_variable_get(var)}
           result
         end
+
+        def [] (arg)
+          instance_variable_get(to_instance_variable arg)
+        end
+
+        def []= (arg,value)
+          instance_variable_set(to_instance_variable(arg), value)
+        end
+
+        private
+
+        def to_instance_variable arg
+          if arg.is_a? Integer
+            sym = instance_variables[arg]
+          else
+            sym = arg[0] == "@" ? arg : "@#{arg}"
+          end
+          raise ArgumentError.new("Undefined offset #{arg} for Factory #{self.class}") if sym.nil?
+          sym
+        end
       end
 
       const_set(class_name, klass) unless class_name.nil?
@@ -43,7 +63,7 @@ Cathe = Factory.new(:a,:b, "c") do
 end
 
 a = Cathe.new(1,2,"c")
-b = Factory::Cathe.new(1,2)
+b = Cathe.new(1,2)
 c = Cathe.new(1)
 
 print "a[0]"; p a[0]
@@ -56,3 +76,10 @@ print "a['a']"; p a['a']
 print "a['@a']"; p a['@a']
 print "a[:a]"; p a[:a]
 print "a[:@a]"; p a[:@a]
+
+a[0] = "new value"
+print 'set new value to a[0]= '; p a[0]
+a[1] = "new value"
+print 'set new value to a[1]= '; p a[1]
+a[2] = "new value"
+print 'set new value to a[2]= '; p a[2]
